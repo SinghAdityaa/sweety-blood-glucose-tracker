@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sweety
+      POSTGRES_USER: sweety
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sweety_dev_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - sweety-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sweety -d sweety"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      API_PORT: 4000
+      DATABASE_URL: postgres://sweety:${POSTGRES_PASSWORD:-sweety_dev_password}@db:5432/sweety
+      JWT_SECRET: ${JWT_SECRET:-local-compose-only-change-this-secret}
+      COOKIE_NAME: sweety_session
+      APP_TIMEZONE: Asia/Kolkata
+      CLIENT_ORIGIN: http://localhost:8080
+      DEMO_USER_NAME: ${DEMO_USER_NAME:-Sweety Demo}
+      DEMO_USER_EMAIL: ${DEMO_USER_EMAIL:-demo@sweety.local}
+      DEMO_USER_PASSWORD: ${DEMO_USER_PASSWORD:-SweetyDemo123!}
+    command: ["sh", "-c", "node scripts/migrate.js && node scripts/seed.js && node src/index.js"]
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+
+  web:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+
+volumes:
+  sweety-postgres:
