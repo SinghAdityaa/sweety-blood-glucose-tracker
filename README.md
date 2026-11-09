@@ -62,8 +62,12 @@ The demo seed includes sample values for today so the reports can be explored im
 - Updating a reading is allowed to retain the same day and slot; conflicts with a different reading in that slot are rejected.
 - The app records readings and displays arithmetic summaries. It does not interpret results or provide medical advice.
 - Docker Compose and standard PostgreSQL connection support are included for running against a full PostgreSQL server.
-- With more time: add browser-based UI tests and accessibility review, and record a short walkthrough after starting the app.
+- With more time: add browser-based UI tests and an accessibility review.
 
 ## Screenshots / walkthrough
 
-After running the app locally, capture the dashboard and the add/edit/report flows here.
+Dashboard preview:
+
+![Sweety dashboard with seeded demo readings](screenshots/dashboard-demo.png)
+
+A 1:31 walkthrough recording is available in `screenshots/sweety-walkthrough.mp4` (kept outside GitHub because it exceeds GitHub's 100 MB file limit).
