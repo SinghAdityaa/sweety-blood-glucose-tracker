@@ -2,7 +2,17 @@
 
 A local take-home project for recording daily blood glucose readings and reviewing daily, month-to-date, and previous-month reports. Built with React, Express, and PostgreSQL.
 
-## Requirements
+## Run locally without installing PostgreSQL
+
+1. Copy `.env.example` to `.env` and set a unique `JWT_SECRET` (at least 24 characters) and a demo password.
+2. Keep `DATABASE_URL=pglite://./.data/sweety` for embedded PostgreSQL with persistent local files.
+3. From the repository root run `npm install`, then `npm run migrate` and `npm run seed`.
+4. Start both app processes with `npm run dev`.
+5. Visit <http://localhost:5173> and sign in using `DEMO_USER_EMAIL` and `DEMO_USER_PASSWORD` from `.env`.
+
+The embedded database files are stored under `.data/` in the project directory. This mode uses [PGlite](https://pglite.dev/), an embedded PostgreSQL build. Docker and standard `postgres://` URLs continue to use a PostgreSQL server.
+
+## Requirements for standalone PostgreSQL
 
 - Node.js 20.14 or newer (Node 22/24 LTS recommended)
 - npm
@@ -51,9 +61,9 @@ The demo seed includes sample values for today so the reports can be explored im
 - Dates are calendar dates in `APP_TIMEZONE`; the default is `Asia/Kolkata`. A report's “previous month” means the full calendar month before the selected date's month. Month-to-date ends on the selected date.
 - Updating a reading is allowed to retain the same day and slot; conflicts with a different reading in that slot are rejected.
 - The app records readings and displays arithmetic summaries. It does not interpret results or provide medical advice.
-- The local environment where this project was scaffolded has Docker installed but its Docker engine is not currently reachable. Docker Compose is included; PostgreSQL-backed interactive flows require a running PostgreSQL server or Docker engine.
+- Docker Compose and standard PostgreSQL connection support are included for running against a full PostgreSQL server.
 - With more time: add browser-based UI tests and accessibility review, and record a short walkthrough after starting the app.
 
 ## Screenshots / walkthrough
 
-After running the app locally, capture the dashboard and the add/edit/report flows here. No screenshots are included yet because the local database service is not running in the current environment.
+After running the app locally, capture the dashboard and the add/edit/report flows here.
