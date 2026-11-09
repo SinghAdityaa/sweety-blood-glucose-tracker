@@ -2,6 +2,7 @@
   "name": "sweety-blood-glucose-tracker",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "A personal blood glucose tracker built with React, Express and PostgreSQL.",
   "workspaces": ["server", "client"],
   "engines": { "node": ">=20.14.0" },
