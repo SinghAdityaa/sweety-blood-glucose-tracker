@@ -1,5 +1,8 @@
 export function errorHandler(error, _request, response, _next) {
   if (response.headersSent) return;
+  if (['ECONNREFUSED', 'ECONNRESET', 'ETIMEDOUT'].includes(error.code)) {
+    return response.status(503).json({ error: { code: 'DATABASE_UNAVAILABLE', message: 'The database is not running. Start PostgreSQL, then try again.' } });
+  }
   if (error.code === '23505') {
     return response.status(409).json({ error: { code: 'DUPLICATE_SLOT', message: 'A reading already exists for this time slot and date.' } });
   }
