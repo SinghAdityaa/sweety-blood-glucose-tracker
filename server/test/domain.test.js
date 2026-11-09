@@ -29,6 +29,7 @@ test('validates whole-number glucose values and date/slot constraints', () => {
 
 test('enforces unique slots and the four-reading daily cap', () => {
   assert.throws(() => validateReadingInput({ value: 100, date: '2026-11-09', slot: 'after_lunch' }, { today: '2026-11-09', existingCount: 2, existingSlots: ['after_lunch'] }), /already have an After lunch reading/);
+  assert.throws(() => validateReadingInput({ value: 100, date: '2026-11-09', slot: 'morning_fasting' }, { today: '2026-11-09', existingCount: 1, existingSlots: ['morning_fasting'] }), /already have a Morning/);
   assert.throws(() => validateReadingInput({ value: 100, date: '2026-11-09', slot: 'after_dinner' }, { today: '2026-11-09', existingCount: 4, existingSlots: [] }), /only 4 readings/);
 });
 

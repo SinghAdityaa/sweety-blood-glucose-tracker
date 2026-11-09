@@ -24,6 +24,13 @@ function sendValidationError(response, error) {
   return true;
 }
 
+function duplicateSlotMessage(slotKey) {
+  const slot = SLOTS[slotKey];
+  if (!slot) return 'A reading already exists for this time slot and date.';
+  const article = /^[aeiou]/i.test(slot) ? 'an' : 'a';
+  return `You already have ${article} ${slot} reading for this date.`;
+}
+
 async function getExistingState(client, userId, date, excludeId) {
   const values = [userId, date];
   let exclusion = '';
@@ -82,8 +89,7 @@ router.post('/', async (request, response, next) => {
   } catch (error) {
     if (sendValidationError(response, error)) return;
     if (error.code === '23505') {
-      const slot = SLOTS[request.body?.slot];
-      return response.status(409).json({ error: { code: 'DUPLICATE_SLOT', message: slot ? `You already have an ${slot} reading for this date.` : 'A reading already exists for this time slot and date.' } });
+      return response.status(409).json({ error: { code: 'DUPLICATE_SLOT', message: duplicateSlotMessage(request.body?.slot) } });
     }
     return next(error);
   } finally {
@@ -122,8 +128,7 @@ router.patch('/:id', async (request, response, next) => {
   } catch (error) {
     if (sendValidationError(response, error)) return;
     if (error.code === '23505') {
-      const slot = SLOTS[request.body?.slot];
-      return response.status(409).json({ error: { code: 'DUPLICATE_SLOT', message: slot ? `You already have an ${slot} reading for this date.` : 'A reading already exists for this time slot and date.' } });
+      return response.status(409).json({ error: { code: 'DUPLICATE_SLOT', message: duplicateSlotMessage(request.body?.slot) } });
     }
     return next(error);
   } finally {

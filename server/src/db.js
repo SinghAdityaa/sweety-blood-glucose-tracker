@@ -23,7 +23,7 @@ if (connectionString.startsWith('pglite://')) {
     const result = await database.query(sql, values);
     return {
       rows: result.rows,
-      rowCount: result.affectedRows ?? result.rows.length,
+      rowCount: result.rows.length || result.affectedRows || 0,
     };
   }
 

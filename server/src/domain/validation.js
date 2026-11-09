@@ -32,7 +32,8 @@ export function validateReadingInput(input, { today, existingCount = 0, existing
     throw new ValidationError('You can add only 4 readings per day.', 'DAILY_LIMIT_REACHED');
   }
   if (existingSlots.includes(slot)) {
-    throw new ValidationError(`You already have an ${SLOTS[slot]} reading for this date.`, 'DUPLICATE_SLOT');
+    const article = /^[aeiou]/i.test(SLOTS[slot]) ? 'an' : 'a';
+    throw new ValidationError(`You already have ${article} ${SLOTS[slot]} reading for this date.`, 'DUPLICATE_SLOT');
   }
 
   return { date, slot, value };
